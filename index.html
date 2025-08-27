@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Челлендж по снижению веса - BetterTogether Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-top">
+                <h1>Челлендж по снижению веса - Кто больше сбросит?</h1>
+                <div class="theme-switcher">
+                    <button class="theme-btn" data-theme="light" title="Светлая тема">☀️</button>
+                    <button class="theme-btn" data-theme="dark" title="Темная тема">🌙</button>
+                    <button class="theme-btn" data-theme="blue" title="Синяя тема">🌊</button>
+                    <button class="theme-btn" data-theme="green" title="Зеленая тема">🌿</button>
+                    <button class="theme-btn" data-theme="shadcn" title="Shadcn тема">🎨</button>
+                    <button class="theme-btn" data-theme="shadcn-dark" title="Shadcn темная">🌑</button>
+                </div>
+            </div>
+            <div class="challenge-info">
+                <div class="info-card">
+                    <span class="info-label">Период регистрации:</span>
+                    <span class="info-value">25.08 - 07.09</span>
+                </div>
+                <div class="info-card">
+                    <span class="info-label">До окончания регистрации:</span>
+                    <span id="daysRemaining" class="info-value">14</span>
+                </div>
+                <div class="info-card">
+                    <span class="info-label">Длительность челленджа:</span>
+                    <span class="info-value">14 дней</span>
+                </div>
+                <div class="info-card">
+                    <span class="info-label">Призовой фонд:</span>
+                    <span id="prizePool" class="info-value">3000 ₽</span>
+                </div>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard" onclick="console.log('Dashboard tab clicked')">Дашборд</button>
+            <button class="nav-tab" data-tab="participants" onclick="console.log('Participants tab clicked')">Участники</button>
+            <button class="nav-tab" data-tab="weight-entry" onclick="console.log('Weight entry tab clicked')">Ввод веса</button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-grid">
+                <div class="card stats-overview">
+                    <h3>Общая статистика</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalParticipants">0</div>
+                            <div class="stat-label">Участников</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="averageProgress">0%</div>
+                            <div class="stat-label">Средний прогресс</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalWeightLost">0 кг</div>
+                            <div class="stat-label">Всего сброшено</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card leaderboard-preview">
+                    <h3>Рейтинг всех участников</h3>
+                    <div id="allParticipantsRanking" class="all-participants-ranking"></div>
+                </div>
+
+                <div class="card chart-container" style="position: relative; height: 400px;">
+                    <div class="chart-header">
+                        <h3>Прогресс участников по дням челленджа (%)</h3>
+                        <button class="btn btn--secondary" onclick="exportData()">Экспорт данных</button>
+                    </div>
+                    <canvas id="groupProgressChart"></canvas>
+                </div>
+                
+                <div class="card chart-container" style="position: relative; height: 400px;">
+                    <div class="chart-header">
+                        <h3>Вес участников по дням челленджа (кг)</h3>
+                    </div>
+                    <canvas id="groupWeightChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants Tab -->
+        <div id="participants" class="tab-content">
+            <div class="section-header">
+                <h2>Управление участниками</h2>
+                <button class="btn btn--primary" onclick="showAddParticipantModal()">Добавить участника</button>
+            </div>
+            
+            <div class="participants-grid" id="participantsList"></div>
+        </div>
+
+        <!-- Weight Entry Tab -->
+        <div id="weight-entry" class="tab-content">
+            <div class="section-header">
+                <h2>Ввод данных о весе</h2>
+                <div class="date-selector">
+                    <label for="entryDate">Дата:</label>
+                    <input type="date" id="entryDate" class="form-control">
+                </div>
+                <button class="btn btn--primary" onclick="showAdminPasswordModal()">Ввод веса участников</button>
+            </div>
+            
+            <div class="weight-entry-grid" id="weightEntryList"></div>
+            
+            <div class="section-actions">
+                <button class="btn btn--primary" onclick="saveWeightEntries()">Сохранить все изменения</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div id="adminPasswordModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Доступ администратора</h3>
+                <button class="modal-close" onclick="hideAdminPasswordModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="adminPassword">Пароль администратора:</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="Введите пароль" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn--primary" onclick="checkAdminPassword()">Войти</button>
+                    <button type="button" class="btn btn--secondary" onclick="hideAdminPasswordModal()">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Participant Modal -->
+    <div id="addParticipantModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Добавить участника</h3>
+                <button class="modal-close" onclick="hideAddParticipantModal()">&times;</button>
+            </div>
+            <form id="addParticipantForm" class="modal-body">
+                <div class="challenge-notice">
+                    <p><strong>Важно:</strong> Участник начнет свой 14-дневный челлендж с выбранной даты.</p>
+                    <p>Период регистрации: 25.08.2025 - 07.09.2025</p>
+                    <p>Победит тот, кто сбросит больше всего веса за свои 14 дней!</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="participantName">Имя:</label>
+                    <input type="text" id="participantName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="startWeight">Начальный вес (кг):</label>
+                    <input type="number" id="startWeight" class="form-control" step="0.1" placeholder="Оставьте пустым, если планируете участие">
+                    <small class="form-help">Оставьте пустым, если планируете участие в будущем</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="joinDate">Дата начала челленджа:</label>
+                    <input type="date" id="joinDate" class="form-control" required>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" onclick="hideAddParticipantModal()">Отмена</button>
+                <button type="submit" form="addParticipantForm" class="btn btn--primary">Добавить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Participant Modal -->
+    <div id="editParticipantModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Редактировать участника</h3>
+                <button class="modal-close" onclick="hideEditParticipantModal()">&times;</button>
+            </div>
+            <form id="editParticipantForm" class="modal-body">
+                <input type="hidden" id="editParticipantId">
+                <div class="form-group">
+                    <label class="form-label" for="editParticipantName">Имя:</label>
+                    <input type="text" id="editParticipantName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editStartWeight">Начальный вес (кг):</label>
+                    <input type="number" id="editStartWeight" class="form-control" step="0.1" placeholder="Оставьте пустым, если планируете участие">
+                    <small class="form-help">Оставьте пустым, если планируете участие в будущем</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editJoinDate">Дата начала челленджа:</label>
+                    <input type="date" id="editJoinDate" class="form-control" required>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" onclick="hideEditParticipantModal()">Отмена</button>
+                <button type="submit" form="editParticipantForm" class="btn btn--primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

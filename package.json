@@ -1,0 +1,43 @@
+{
+  "name": "weight-loss-challenge",
+  "version": "1.0.0",
+  "description": "Веб-приложение для управления челленджем по снижению веса с отслеживанием прогресса участников",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "weight-loss",
+    "challenge",
+    "fitness",
+    "progress-tracking",
+    "health",
+    "wellness",
+    "web-app",
+    "javascript",
+    "chartjs",
+    "responsive"
+  ],
+  "author": "CraftedByPixels",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CraftedByPixels/insi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CraftedByPixels/insi/issues"
+  },
+  "homepage": "https://github.com/CraftedByPixels/insi#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

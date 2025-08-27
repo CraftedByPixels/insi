@@ -441,6 +441,17 @@ pre code {
   background: var(--color-secondary-active);
 }
 
+.btn--danger {
+  background: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+  border: 1px solid var(--color-destructive);
+}
+
+.btn--danger:hover {
+  background: var(--color-destructive-hover);
+  opacity: 0.9;
+}
+
 .btn--outline {
   background: transparent;
   border: 1px solid var(--color-border);

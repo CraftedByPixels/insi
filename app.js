@@ -74,88 +74,17 @@ function loadData() {
             }
         });
     } else {
-        // Load sample data
-        participants = [
-            {
-                id: 1,
-                name: "Алексей",
-                startWeight: 85,
-                joinDate: "2025-08-25", // Первый день челленджа
-                status: "participating"
-            },
-            {
-                id: 2,
-                name: "Мария", 
-                startWeight: 72,
-                joinDate: "2025-08-28", // Присоединилась на 4-й день
-                status: "participating"
-            },
-            {
-                id: 3,
-                name: "Дмитрий",
-                startWeight: 95,
-                joinDate: "2025-09-01", // Присоединился на 8-й день
-                status: "participating"
-            }
-        ];
-        saveData(); // Save sample data
+        // Начинаем с пустого списка участников
+        participants = [];
+        saveData();
     }
 
     if (savedWeightEntries) {
         weightEntries = JSON.parse(savedWeightEntries);
     } else {
-        // Load sample weight entries
-        weightEntries = [
-            // Алексей (начал 25.08)
-            { participantId: 1, date: "2025-08-25", weight: 85 },
-            { participantId: 1, date: "2025-08-26", weight: 84.8 },
-            { participantId: 1, date: "2025-08-27", weight: 84.5 },
-            { participantId: 1, date: "2025-08-28", weight: 84.2 },
-            { participantId: 1, date: "2025-08-29", weight: 84.0 },
-            { participantId: 1, date: "2025-08-30", weight: 83.8 },
-            { participantId: 1, date: "2025-08-31", weight: 83.5 },
-            { participantId: 1, date: "2025-09-01", weight: 83.2 },
-            { participantId: 1, date: "2025-09-02", weight: 83.0 },
-            { participantId: 1, date: "2025-09-03", weight: 82.8 },
-            { participantId: 1, date: "2025-09-04", weight: 82.5 },
-            { participantId: 1, date: "2025-09-05", weight: 82.3 },
-            { participantId: 1, date: "2025-09-06", weight: 82.0 },
-            { participantId: 1, date: "2025-09-07", weight: 81.8 },
-            
-            // Мария (начала 28.08)
-            { participantId: 2, date: "2025-08-28", weight: 72 },
-            { participantId: 2, date: "2025-08-29", weight: 71.8 },
-            { participantId: 2, date: "2025-08-30", weight: 71.5 },
-            { participantId: 2, date: "2025-08-31", weight: 71.2 },
-            { participantId: 2, date: "2025-09-01", weight: 71.0 },
-            { participantId: 2, date: "2025-09-02", weight: 70.8 },
-            { participantId: 2, date: "2025-09-03", weight: 70.5 },
-            { participantId: 2, date: "2025-09-04", weight: 70.2 },
-            { participantId: 2, date: "2025-09-05", weight: 70.0 },
-            { participantId: 2, date: "2025-09-06", weight: 69.8 },
-            { participantId: 2, date: "2025-09-07", weight: 69.5 },
-            { participantId: 2, date: "2025-09-08", weight: 69.2 },
-            { participantId: 2, date: "2025-09-09", weight: 69.0 },
-            { participantId: 2, date: "2025-09-10", weight: 68.8 },
-            { participantId: 2, date: "2025-09-11", weight: 68.5 },
-            
-            // Дмитрий (начал 01.09)
-            { participantId: 3, date: "2025-09-01", weight: 95 },
-            { participantId: 3, date: "2025-09-02", weight: 94.8 },
-            { participantId: 3, date: "2025-09-03", weight: 94.5 },
-            { participantId: 3, date: "2025-09-04", weight: 94.2 },
-            { participantId: 3, date: "2025-09-05", weight: 94.0 },
-            { participantId: 3, date: "2025-09-06", weight: 93.8 },
-            { participantId: 3, date: "2025-09-07", weight: 93.5 },
-            { participantId: 3, date: "2025-09-08", weight: 93.2 },
-            { participantId: 3, date: "2025-09-09", weight: 93.0 },
-            { participantId: 3, date: "2025-09-10", weight: 92.8 },
-            { participantId: 3, date: "2025-09-11", weight: 92.5 },
-            { participantId: 3, date: "2025-09-12", weight: 92.2 },
-            { participantId: 3, date: "2025-09-13", weight: 92.0 },
-            { participantId: 3, date: "2025-09-14", weight: 91.8 }
-        ];
-        saveData(); // Save sample data
+        // Начинаем с пустого списка записей веса
+        weightEntries = [];
+        saveData();
     }
 
     if (savedChallengeSettings) {
@@ -1614,6 +1543,21 @@ function saveAdminWeightEntries(button) {
         alert('Нет изменений для сохранения');
     }
 }
+
+// Data management functions
+window.clearAllData = function() {
+    if (confirm('Вы уверены, что хотите удалить ВСЕ данные? Это действие нельзя отменить!')) {
+        if (prompt('Введите пароль администратора для подтверждения:') === ADMIN_PASSWORD) {
+            participants = [];
+            weightEntries = [];
+            localStorage.clear();
+            alert('Все данные удалены! Приложение перезагружено.');
+            location.reload();
+        } else {
+            alert('Неверный пароль! Данные не удалены.');
+        }
+    }
+};
 
 // Export functionality
 window.exportData = function() {
